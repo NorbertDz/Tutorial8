@@ -150,6 +150,7 @@ public async Task<List<ClientTripDTO>> GetTripsForClient(int clientId)
         string checkQuery = @"
         SELECT 1 FROM Client_Trip 
         WHERE IdClient = @IdClient AND IdTrip = @IdTrip";
+        
 
         string deleteQuery = @"
         DELETE FROM Client_Trip 
