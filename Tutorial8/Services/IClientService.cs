@@ -9,4 +9,6 @@ public interface IClientService
     Task addNewClient(ClientDTO client);
     
     Task registerClientNewTrip(int clientId, int tripId);
+    
+    Task<bool> unregisterClientFromTrip(int clientId, int tripId);
 }

@@ -144,4 +144,40 @@ public async Task<List<ClientTripDTO>> GetTripsForClient(int clientId)
             }
         }
     }
+
+    public async Task<bool> unregisterClientFromTrip(int clientId, int tripId)
+    {
+        string checkQuery = @"
+        SELECT 1 FROM Client_Trip 
+        WHERE IdClient = @IdClient AND IdTrip = @IdTrip";
+
+        string deleteQuery = @"
+        DELETE FROM Client_Trip 
+        WHERE IdClient = @IdClient AND IdTrip = @IdTrip";
+
+        using (var conn = new SqlConnection(_connectionString))
+        {
+            await conn.OpenAsync();
+
+            using (var checkCmd = new SqlCommand(checkQuery, conn))
+            {
+                checkCmd.Parameters.AddWithValue("@IdClient", clientId);
+                checkCmd.Parameters.AddWithValue("@IdTrip", tripId);
+
+                var exists = await checkCmd.ExecuteScalarAsync();
+                if (exists == null)
+                    return false;
+            }
+
+            using (var deleteCmd = new SqlCommand(deleteQuery, conn))
+            {
+                deleteCmd.Parameters.AddWithValue("@IdClient", clientId);
+                deleteCmd.Parameters.AddWithValue("@IdTrip", tripId);
+
+                await deleteCmd.ExecuteNonQueryAsync();
+            }
+        }
+
+        return true;
+    }
 }

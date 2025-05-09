@@ -52,4 +52,15 @@ public class ClientController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+    
+    [HttpDelete("/api/clients/{id}/trips/{tripId}")]
+    public async Task<IActionResult> UnregisterClientFromTrip(int id, int tripId)
+    {
+        var result = await _clientService.unregisterClientFromTrip(id, tripId);
+
+        if (!result)
+            return NotFound($"Registration for client {id} and trip {tripId} does not exist.");
+
+        return Ok($"Client {id} has been unregistered from trip {tripId}.");
+    }
 }
